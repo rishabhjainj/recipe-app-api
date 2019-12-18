@@ -13,18 +13,18 @@ def create_user(**params):
 	return get_user_model().objects.create_user(**params)
 
 
-class PublicUserApiTest(TestCase):
-	"""Test the user API (public)"""
+class PublicUserApiTests(TestCase):
+	"""Test the users API (public)"""
 
-	def setUp(self):
+	def SetUp(self):
 		self.client = APIClient()
 
 	def test_create_valid_user_success(self):
-		"""Test creating user with walid payload is successful"""
+		"""Test creating user with valid payload is successful"""
 		payload = {
-			'email': 'test@rnotappdev.com',
+			'email': 'test@gmail.com',
 			'password': 'testpass',
-			'name': 'Test Name'
+			'name': 'Test name'
 		}
 		res = self.client.post(CREATE_USER_URL, payload)
 
@@ -35,11 +35,7 @@ class PublicUserApiTest(TestCase):
 
 	def test_user_exists(self):
 		"""Test creating a user that already exists fails"""
-		payload = {
-			'email': 'test@rnotappdev.com',
-			'password': 'testpass',
-			'name': 'Test Name'
-		}
+		payload = {'email': 'test@gmail.com', 'password': 'testpass', 'name': 'Test name'}
 		create_user(**payload)
 
 		res = self.client.post(CREATE_USER_URL, payload)
@@ -47,12 +43,8 @@ class PublicUserApiTest(TestCase):
 		self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
 	def test_password_too_short(self):
-		"""Test that the password must be more than 5 charactters"""
-		payload = {
-			'email': 'test@rnotappdev.com',
-			'password': 'te',
-			'name': 'Test Name'
-		}
+		"""Test that the password must be more than 5 characters"""
+		payload = {'email': 'test@gmail.com', 'password': 'pw'}
 		res = self.client.post(CREATE_USER_URL, payload)
 
 		self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
